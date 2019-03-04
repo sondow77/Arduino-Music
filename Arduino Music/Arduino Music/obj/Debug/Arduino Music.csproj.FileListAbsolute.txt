@@ -1,0 +1,34 @@
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\bin\Debug\Arduino Music.exe.config
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\bin\Debug\Arduino Music.exe
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\bin\Debug\Arduino Music.pdb
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csprojAssemblyReference.cache
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\MainWindow.g.cs
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\App.g.cs
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music_MarkupCompile.cache
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music_MarkupCompile.lref
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\MainWindow.baml
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.g.resources
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino_Music.Properties.Resources.resources
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.GenerateResource.cache
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.CoreCompileInputs.cache
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.exe
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.pdb
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\bin\Debug\MusicXml.dll
+C:\Users\Nico\source\repos\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.CopyComplete
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\bin\Debug\Arduino Music.exe.config
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\bin\Debug\Arduino Music.exe
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\bin\Debug\Arduino Music.pdb
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\bin\Debug\MusicXml.dll
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csprojAssemblyReference.cache
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\MainWindow.g.cs
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\App.g.cs
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music_MarkupCompile.cache
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music_MarkupCompile.lref
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\MainWindow.baml
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.g.resources
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino_Music.Properties.Resources.resources
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.GenerateResource.cache
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.CoreCompileInputs.cache
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.csproj.CopyComplete
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.exe
+C:\Users\Nico\Downloads\NitroShare\Arduino Music\Arduino Music\obj\Debug\Arduino Music.pdb
