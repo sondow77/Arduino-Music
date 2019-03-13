@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
@@ -21,7 +21,6 @@ namespace Arduino_Music
         MusicXml.Domain.Score mxml = null;
         private void Browse_file_txt_Click(object sender, RoutedEventArgs e)
         {
-            //ifile.Filter = "Archivos de imágenes (*.bmp, *.jpg)|*.bmp;*.jpg|Todos los archivos (*.*)|*.*";
             ifile.Filter = "MusicXML (*.xml)|*.xml";
             if (ifile.ShowDialog() == true && ifile.FileName.EndsWith(".xml") && File.Exists(ifile.FileName))
             {
@@ -150,19 +149,35 @@ namespace Arduino_Music
         {
             return o.GetType().GetProperty(p).GetValue(o, null);
         }
+        int GetFrequency(object pitch)
+        {
+            string note = GetPropertyVaue(pitch, "Step").ToString();
+            bool alter = GetPropertyVaue(pitch, "Alter").ToString() == "1";
+            string octave = GetPropertyVaue(pitch, "Octave").ToString();
+
+            string nota = note;
+            if (alter)
+            {
+                nota = nota.ToLower();
+            }
+            nota += octave;
+            return (int)Math.Floor(NoteFrequency(nota));
+        }
+        object GetElement(MusicXml.Domain.Measure measure,int m)
+        {
+            return measure.MeasureElements[m].Element;
+        }
+        bool GetIsChord(object element)
+        {
+            return (bool)GetPropertyVaue(element, "IsChordTone");
+        }
+        object GetPitch(object element)
+        {
+            return GetPropertyVaue(element, "Pitch");
+        }
         private void Convert_btn_Click(object sender, RoutedEventArgs e)
         {
             string nl = Environment.NewLine;
-            /*int measures_count = mxml.Parts[track_cbx.SelectedIndex].Measures.Count;
-            string[] frequencies = new string[measures_count];
-            frequencies[0] = "int nt[] = {";
-            string[] durations = new string[measures_count];
-            durations[0] = "int dr[] = {";
-            for (int i = 1; i < measures_count;i++)
-            {
-                frequencies[i] = "";
-                durations[i] = "";
-            }*/
             string code = "";
             string frequencies = "";
             string durations = "";
@@ -174,32 +189,36 @@ namespace Arduino_Music
                 int note_count = 0;
                 foreach (var measure in mxml.Parts[track_cbx.SelectedIndex].Measures)
                 {
-                    foreach(var measure_element in measure.MeasureElements)
+                    if ((bool)cb_prom.IsChecked)
                     {
-                        var element = measure_element.Element;
-                        if (!(bool)GetPropertyVaue(element, "IsChordTone"))
+                        int m = 0;
+                        while (m < measure.MeasureElements.Count)
                         {
-                            
+                            var element = GetElement(measure, m);
+
                             int dur = (int)GetPropertyVaue(element, "Duration");
-                            object pitch = GetPropertyVaue(element, "Pitch");
+                            object pitch = GetPitch(element);
                             int freq = 0;
                             if (pitch != null)
                             {
-                                string note = GetPropertyVaue(pitch, "Step").ToString();
-                                bool alter = GetPropertyVaue(pitch, "Alter").ToString() == "1";
-                                string octave = GetPropertyVaue(pitch, "Octave").ToString();
-
-                                string nota = note;
-                                if (alter)
+                                freq = GetFrequency(pitch);
+                                int chordNotes = 1;
+                                while (m + 1 < measure.MeasureElements.Count && GetIsChord(GetElement(measure, m + 1)))
                                 {
-                                    nota = nota.ToLower();
+                                    element = GetElement(measure, m + 1);
+                                    pitch = GetPitch(element);
+                                    freq += GetFrequency(pitch);
+                                    chordNotes++;
+                                    m++;
                                 }
-                                nota += octave;
-                                freq = (int)Math.Floor(NoteFrequency(nota));
+                                if (chordNotes > 1)
+                                {
+                                    freq = freq / chordNotes;
+                                    chordNotes = 1;
+                                }
                             }
-                            
-                            note_count += 1;
-                            if(note_count != ((int)(note_count/10)*10))
+                            note_count++;
+                            if (note_count != ((int)(note_count / 10) * 10))
                             {
                                 frequencies += freq + ",";
                                 durations += dur + ",";
@@ -209,7 +228,7 @@ namespace Arduino_Music
                                 frequencies += freq;
                                 durations += dur;
                                 ten_count += 1;
-                                if(ten_count == 1)
+                                if (ten_count == 1)
                                 {
                                     code += "int nt[] = {" + frequencies.Remove(frequencies.Length - 1, 1) + "};" + nl + "int dr[] = {" + durations.Remove(durations.Length - 1, 1) + "};"
                                         + nl + "void setup()" + nl + "{" + nl + "	for (int i = 0; i < 10; i++)"
@@ -220,7 +239,7 @@ namespace Arduino_Music
                                 {
                                     freqs = frequencies.Split(',');
                                     durs = durations.Split(',');
-                                    for(int l = 0; l < freqs.Length;  l++)
+                                    for (int l = 0; l < freqs.Length; l++)
                                     {
                                         code += "	nt[" + l.ToString() + "] = " + freqs[l] + ";" + nl;
                                         code += "	dr[" + l.ToString() + "] = " + durs[l] + ";" + nl;
@@ -232,9 +251,65 @@ namespace Arduino_Music
                                 frequencies = "";
                                 durations = "";
                             }
+                            m++;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var measure_element in measure.MeasureElements)
+                        {
+                            var element = measure_element.Element;
+
+                            if (! GetIsChord(element))
+                            {
+
+                                int dur = (int)GetPropertyVaue(element, "Duration");
+                                object pitch = GetPitch(element);
+                                int freq = 0;
+                                if (pitch != null)
+                                {
+                                    freq = GetFrequency(pitch);
+                                }
+
+                                note_count += 1;
+                                if (note_count != ((int)(note_count / 10) * 10))
+                                {
+                                    frequencies += freq + ",";
+                                    durations += dur + ",";
+                                }
+                                else
+                                {
+                                    frequencies += freq;
+                                    durations += dur;
+                                    ten_count += 1;
+                                    if (ten_count == 1)
+                                    {
+                                        code += "int nt[] = {" + frequencies.Remove(frequencies.Length - 1, 1) + "};" + nl + "int dr[] = {" + durations.Remove(durations.Length - 1, 1) + "};"
+                                            + nl + "void setup()" + nl + "{" + nl + "	for (int i = 0; i < 10; i++)"
+                                            + nl + "	{" + nl + "		tone(" + output_cbx.Text + ", nt[i], dr[i]);" + nl + "		delay(dr[i] * 0.30);"
+                                            + nl + "		noTone(" + output_cbx.Text + ");" + nl + "	}" + nl;
+                                    }
+                                    else
+                                    {
+                                        freqs = frequencies.Split(',');
+                                        durs = durations.Split(',');
+                                        for (int l = 0; l < freqs.Length; l++)
+                                        {
+                                            code += "	nt[" + l.ToString() + "] = " + freqs[l] + ";" + nl;
+                                            code += "	dr[" + l.ToString() + "] = " + durs[l] + ";" + nl;
+                                        }
+                                        code += "	for (int i = 0; i < " + freqs.Length + "; i++)"
+                                            + nl + "	{" + nl + "		tone(" + output_cbx.Text + ", nt[i], dr[i]);" + nl + "		delay(dr[i] * 0.30);"
+                                            + nl + "		noTone(" + output_cbx.Text + ");" + nl + "	}" + nl;
+                                    }
+                                    frequencies = "";
+                                    durations = "";
+                                }
+                            }
                         }
                     }
                 }
+                
                 if (ten_count > 1)
                 {
                     frequencies = frequencies.Remove(frequencies.Length - 1, 1);
@@ -258,58 +333,8 @@ namespace Arduino_Music
                                         + nl + "	{" + nl + "		tone(" + output_cbx.Text + ", nt[i], dr[i]);" + nl + "		delay(dr[i] * 0.30);"
                                         + nl + "		noTone(" + output_cbx.Text + ");" + nl + "	}" + nl;
                 }
-                /*var measures = mxml.Parts[track_cbx.SelectedIndex].Measures;
-                for(int m = 0; m < measures.Count; m++)
-                {
-                    var measure = measures[m];
-                    foreach (var measure_element in measure.MeasureElements)
-                    {
-                        var element = measure_element.Element;
-                        int dur = (int)GetPropertyVaue(element, "Duration");
-                        bool ischord = (bool)GetPropertyVaue(element, "IsChordTone");
-                        object pitch = GetPropertyVaue(element, "Pitch");
-                        int freq = 0;
-                        if (pitch != null)
-                        {
-                            string note = GetPropertyVaue(pitch, "Step").ToString();
-                            bool alter = GetPropertyVaue(pitch, "Alter").ToString() == "1";
-                            string octave = GetPropertyVaue(pitch, "Octave").ToString();
-
-                            string nota = note;
-                            if (alter)
-                            {
-                                nota = nota.ToLower();
-                            }
-                            nota += octave;
-                            freq = (int)Math.Floor(NoteFrequency(nota));
-                        }
-                        if (!ischord)
-                        {
-                            switch (model_cbx.SelectedIndex)
-                            {
-                                case 0:
-                                    durations[m] += dur + ",";
-                                    frequencies[m] += freq + ",";
-                                break;
-                            }
-                        }
-                    }
-                    if(m == 0)
-                    {
-                        /*code += frequencies[0].Remove(frequencies[0].Length - 1,1) + "};" + nl + durations[0].Remove(durations[0].Length -1, 1) + "};"
-                            + nl + "void setup()" + nl + "{" + nl + "	for (int i = 0; i < " + measure.MeasureElements.Count.ToString() + "; i++)"
-                            + nl + "	{" + nl + "		tone(" + output_cbx.Text + ", nt[i], dr[i]);" + nl + "		delay(dr[i] * 1.30);"
-                            + nl + "		noTone(" + output_cbx.Text + ");" + nl + "	}";*//*
-                    }
-                    else
-                    {
-                        /*code += nl + "	nt = { " + frequencies[m].Remove(frequencies[m].Length -1, 1) + " };" + nl + "	dr = { " + durations[m].Remove(durations[m].Length -1, 1) + " };"
-                            + nl + "	for (int i = 0; i < " + measure.MeasureElements.Count.ToString() + "; i++)"
-                            + nl + "	{" + nl + "		tone(" + output_cbx.Text + ", nt[i], dr[i]);" + nl + "		delay(dr[i] * 1.30);"
-                            + nl + "		noTone(" + output_cbx.Text + ");" + nl + "	}";*//*
-                    }
-                }*/
                 code += "}" + nl + "void loop(){}";
+                MessageBox.Show("Listo");
             }
             if(Directory.Exists(folder_txt.Text))
             {
