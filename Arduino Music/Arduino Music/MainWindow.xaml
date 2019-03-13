@@ -1,4 +1,4 @@
-﻿<Window x:Class="Arduino_Music.MainWindow"
+<Window x:Class="Arduino_Music.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,6 +29,7 @@
                         <ComboBoxItem Content="Arduino Mega 2560"/>
                         <ComboBoxItem Content="Arduino UNO"/>
                     </ComboBox>
+                    <CheckBox x:Name="cb_prom" Content="Promediar notas de acorde" HorizontalAlignment="Left" Margin="20,307,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="TabItem">
